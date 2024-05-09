@@ -1,0 +1,6 @@
+Get integer height from user
+Check if int is between 1 and 7 (reprompt if not)
+Iterate from 1 through height
+    Nested for loop iterate from height - 1 to 0
+        Print space
+    Print #

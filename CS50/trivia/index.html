@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            // TODO: Add code to check answers to questions
+            //Run script once DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+
+                //When correct answer is clicked, change button to green
+                let correctButton = document.querySelector('.correct');
+                correctButton.addEventListener('click', function() {
+                    correctButton.style.backgroundColor = 'green';
+                    document.querySelector('#feedback1').innerHTML = 'Correct!';
+                });
+
+                //When any incorrect answer is clicked change its color to red
+                let incorrectButtons = document.querySelectorAll('.incorrect');
+
+                for (let i = 0; i < incorrectButtons.length; i++) {
+                    incorrectButtons[i].addEventListener('click', function() {
+                        incorrectButtons[i].style.backgroundColor = 'red';
+                        document.querySelector('#feedback1').innerHTML = 'Incorrect';
+                    });
+                };
+
+                //When the submit button is clicked, check if the user response is correct and output result
+                document.querySelector('#submit').addEventListener('click', function() {
+                    let response = document.querySelector('#response');
+                    if (response.value.toLowerCase().trim() == "klay thompson") {
+                        document.querySelector('#feedback2').innerHTML = 'Correct!';
+                        response.style.backgroundColor = 'green';
+                    } else {
+                        document.querySelector('#feedback2').innerHTML = 'Incorrect';
+                        response.style.backgroundColor = 'red';
+                    }
+
+
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <!-- TODO: Add multiple choice question here -->
+
+                <h3>Who is the greatest shooter of all time?</h3>
+                <button class="incorrect">Ray Allen</button>
+                <button class="correct">Stephen Curry</button>
+                <button class="incorrect">Reggie Miller</button>
+                <button class="incorrect">JJ Redick</button>
+
+                <p id="feedback1"></p>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <!-- TODO: Add free response question here -->
+
+                <h3>Who holds the NBA record for most 3 pointers in a game?</h3>
+                <input id="response"></input>
+                <button id="submit">Submit</button>
+
+                <p id="feedback2"></p>
+            </div>
+        </div>
+    </body>
+</html>

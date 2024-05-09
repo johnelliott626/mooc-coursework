@@ -1,0 +1,9 @@
+# Ignore all .dist files
+*.dist
+
+# Ignore all __pycache__ directories
+*.pyc
+__pycache__/
+
+# Ignore macOS directory index files
+*.DS_Store
