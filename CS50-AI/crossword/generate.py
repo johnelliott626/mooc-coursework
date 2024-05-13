@@ -116,11 +116,8 @@ class CrosswordCreator():
         """
         # Check if the x and y overlap on the crossword puzzle.
         does_overlap = self.crossword.overlaps[x, y]
-        if not does_overlap:
-            return False
-        else:
-            x_overlap_char = does_overlap[0]
-            y_overlap_char = does_overlap[1]
+        if does_overlap:
+            x_overlap_char, y_overlap_char = does_overlap
 
             # Remove values from X's domain that does not have a possible corresponding values in Y
             x_domain = self.domains[x].copy()
@@ -137,6 +134,8 @@ class CrosswordCreator():
                     self.domains[x].remove(x_word)
                     revision_made = True
             return revision_made
+        else:
+            return False
 
     def ac3(self, arcs=None):
         """
@@ -148,20 +147,31 @@ class CrosswordCreator():
         return False if one or more domains end up empty.
         """
        
-        queue = arcs if arcs else []
-        if arcs:
+        # Generate a list of arcs
+        if arcs is not None:
             queue = arcs
         else:
             queue = []
-            variables = [self.crossword.variables]
-            num_variables = len(variables)
-            for i in range(num_variables):
-                for j in range(i+1, num_variables):
-                    x = variables[i]
-                    y = variables[j]
-                    if self.crossword.overlaps[x, y]:
+            variables = self.crossword.variables
+            for x in variables:
+                for y in variables:
+                    if x != y and self.crossword.overlaps[x, y]:
                         queue.append((x, y))
-        # LEFT OFF HERE
+        
+        # Enforce arc consistency with the ac3 algorithm
+        while queue:
+            x, y = queue.pop(0)
+
+            # If a revision needs to be made in the arc
+            if self.revise(x, y):
+                # Return false if the domain for x is empty
+                if len(self.domains[x]) == 0:
+                    return False
+                
+                # A revision was made, so enqueue each neighbor arc from neighbor to x
+                for neighbor in self.crossword.neighbors(x):
+                    queue.append((neighbor, x))
+        return True
 
     def assignment_complete(self, assignment):
         """
