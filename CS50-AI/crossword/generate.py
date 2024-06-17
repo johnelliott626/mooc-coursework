@@ -198,11 +198,12 @@ class CrosswordCreator():
         # Check binary constraints
         for variable, word in assignment.items():
             for neighbor in self.crossword.neighbors(variable):
-                overlap_indicies = self.crossword.overlaps[variable, neighbor]
-                if overlap_indicies:
-                    word_overlap_char, neighbor_overlap_char = overlap_indicies
-                    if word[word_overlap_char] != assignment[neighbor][neighbor_overlap_char]:
-                        return False
+                if neighbor in assignment:
+                    overlap_indicies = self.crossword.overlaps[variable, neighbor]
+                    if overlap_indicies:
+                        word_overlap_char, neighbor_overlap_char = overlap_indicies
+                        if word[word_overlap_char] != assignment[neighbor][neighbor_overlap_char]:
+                            return False
         return True
 
 
