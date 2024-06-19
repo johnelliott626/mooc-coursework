@@ -214,7 +214,30 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
-        raise NotImplementedError
+        # The unordered domain values for var
+        original_domain = self.domains[var]
+
+        # Elimination map to count the number of neighbor variable eliminations for each word in the original domain
+        elimination_map = { word : 0 for word in original_domain }
+
+        # Compute number of eliminations for each word in the domain
+        for word in original_domain:
+            for neighbor in self.crossword.neighbors(var):
+                # If a neighbor is already in the assignment it already has an assigned value, so skip it
+                if neighbor not in assignment:
+                    # Overlapping character indices
+                    var_overlap_index, neighbor_overlap_index = self.crossword.overlaps[var, neighbor]
+                    word_overlap_char = word[var_overlap_index]
+
+                    # Increment elimination map count if the word eliminates a word from the neighbors domain
+                    neighbor_domain = self.domains[neighbor]
+                    for neighbor_word in neighbor_domain:
+                        if neighbor_word[neighbor_overlap_index] != word_overlap_char:
+                            elimination_map[word] += 1
+
+        # Sort the domain in ascending order of the elimination map
+        ordered_domain = sorted(elimination_map, key=lambda word: elimination_map[word])
+        return ordered_domain
 
     def select_unassigned_variable(self, assignment):
         """
