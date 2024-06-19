@@ -247,7 +247,19 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-        raise NotImplementedError
+        all_variables = self.crossword.variables
+        unassigned_variables = [var for var in all_variables if var not in assignment]
+
+        # Count domain and degree of each unassigned variable
+        domain_degree_map = dict()
+        for var in unassigned_variables:
+            num_words = len(self.domains[var])
+            num_degrees = len(self.crossword.neighbors(var))
+            domain_degree_map[var] = (num_words, num_degrees)
+        
+        # Return the variable with the minimum number of remaining values in its domain, break ties with highest degree
+        select_variable = min(domain_degree_map, key=lambda var: (domain_degree_map[var][0], -domain_degree_map[var][1]))
+        return select_variable
 
     def backtrack(self, assignment):
         """
