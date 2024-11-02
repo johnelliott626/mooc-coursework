@@ -140,6 +140,7 @@ class NimAI():
             return 0
         
         best_action_reward = self.get_q_value(state, available_actions[0])
+  
         for action in available_actions:
             current_reward = self.get_q_value(state, action)
             if current_reward > best_action_reward:
