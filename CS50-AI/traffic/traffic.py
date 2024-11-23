@@ -81,8 +81,44 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    # Create a sequential model
+    model = tf.keras.models.Sequential([
 
+        # Add the input shape of the first layer (width, height, 3 values for each pixel -- RGB)
+        tf.keras.layers.Input(shape=(IMG_WIDTH, IMG_HEIGHT, 3)),
+
+        # Add the first layer as a convolutional layer. Learn 32 filters using a 3x3 kernel.
+        tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation="relu"),
+    ])
+
+    # Add the second layer as a max pooling layer with a 2x2 filter size
+    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+
+    # Add another convolutional layer with 64 filters
+    model.add(tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
+    # Add another max pooling layer with a 2x2 filter size
+    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+
+    # Flatten the units (pixels) to serve as input to the traditional neural network
+    model.add(tf.keras.layers.Flatten())
+
+    # Add a hidden layer with dropout that connects to all neurons of previous layer (all pixels)
+    model.add(tf.keras.layers.Dense(units=128, activation="relu"))
+    model.add(tf.keras.layers.Dropout(rate=0.25))
+
+
+    # Add the output layer with the number of image categories as units
+    model.add(tf.keras.layers.Dense(units=NUM_CATEGORIES, activation="softmax"))
+
+
+    # compile the model so it is ready for training
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 if __name__ == "__main__":
     main()
